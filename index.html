@@ -357,4 +357,30 @@ const _companyOldSelect=selectShipCompany;selectShipCompany=function(id){_compan
  if(forgot)forgot.addEventListener('click',()=>{if(typeof notice==='function')notice('Bản demo lưu tài khoản trên thiết bị. Hãy dùng tài khoản khác hoặc liên hệ quản trị viên để khôi phục.');});
  sync();
 })();
-</script></body></html>
+</script>
+<!-- Safari login visibility and transition repair -->
+<style>
+#auth.login-screen.hidden { display:none!important; visibility:hidden!important; pointer-events:none!important; }
+#factionScreen.hidden,#rulesScreen.hidden,#game.hidden {display:none!important;}
+</style>
+<script>
+(function(){
+  const auth=document.getElementById('auth');
+  const observer=new MutationObserver(()=>{
+    if(auth.classList.contains('hidden')){
+      auth.style.setProperty('display','none','important');
+    }else{
+      auth.style.removeProperty('display');
+    }
+  });
+  observer.observe(auth,{attributes:true,attributeFilter:['class']});
+  // Preserve existing accounts and the original login form handlers.
+  // Show a useful error instead of silently freezing if a game widget is missing.
+  window.addEventListener('error',function(event){
+    if(typeof notice==='function' && !auth.classList.contains('hidden')){
+      notice('Lỗi giao diện: '+(event.message||'Không xác định'));
+    }
+  });
+})();
+</script>
+</body></html>
